@@ -9,20 +9,14 @@ export const client = new ApolloClient({
 */
 
 export const client = new ApolloClient({
-    uri: "http://localhost:8080",
+    uri: "http://localhost:8080/graphql",
     cache: new InMemoryCache(),
-    
-    headers: {
-      'Access-Control-Allow-Origin': 'http://localhost:8080',
-    },
 
   });
 
   export const clientSSR = new ApolloClient({
-    uri: "http://localhost:8080",
+    uri: "http://localhost:8080/graphql",
     cache: new InMemoryCache(),
     ssrMode: true,
-    headers: {
-        'Access-Control-Allow-Origin': 'http://localhost:8080',
-        },
+
     });

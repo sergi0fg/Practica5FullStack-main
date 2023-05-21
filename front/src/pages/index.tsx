@@ -10,9 +10,9 @@ const Home = () => {
   };
   return (
     <>
-      <Header>Bienvenido a la aplicación de citas médicas</Header>
+      <Header>Aplicación de citas médicas</Header>
       <DivButton>
-        <button onClick={handleCitas}>Citas médicas</button>
+        <button onClick={handleCitas}>Ver Citas</button>
       </DivButton>
     </>
   );
@@ -31,7 +31,7 @@ export const Header = styled.header`
   font-size: 4rem;
   font-weight: 700;
   color: white;
-  margin-bottom: 40rem;
+  margin-bottom: 5rem;
 `;
 
 export const DivButton = styled.div`
