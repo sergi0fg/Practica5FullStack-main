@@ -1,5 +1,5 @@
 import router, { useRouter } from "next/router";
-import { DivButton,  } from "@/pages/index";
+import { DivButton,  } from '@/components/ComponentIndex';
 import { gql, useQuery } from "@apollo/client";
 import { get } from "http";
 import styled from "styled-components";

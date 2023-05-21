@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { DivButton, Header } from '@/pages/index';
+import { DivButton, Header } from '@/components/ComponentIndex';
 import e from 'cors';
 
 
