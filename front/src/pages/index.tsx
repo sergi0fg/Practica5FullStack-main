@@ -8,11 +8,23 @@ const Home = () => {
   const handleCitas = () => {
     router.push("/citas");
   };
+  const handleAddCitas = () => {
+    router.push("/addCita");
+  };
+  const handleBookCitas = () => {
+    router.push("/bookCita");
+  };
+  const handleDeleteCitas = () => {
+    router.push("/deleteCita");
+  };
   return (
     <>
       <Header>Aplicación de citas médicas</Header>
       <DivButton>
         <button onClick={handleCitas}>Ver Citas</button>
+        <button onClick={handleAddCitas}>Añadir Cita</button>
+        <button onClick={handleBookCitas}>Reservar Cita</button>
+        <button onClick={handleDeleteCitas}>Eliminar Cita</button>
       </DivButton>
     </>
   );
@@ -36,6 +48,8 @@ export const Header = styled.header`
 
 export const DivButton = styled.div`
   display: flex;
+  flex-direction: column;
+  gap: 1rem;
   justify-content: center;
   align-items: center;
   text-align: center;
