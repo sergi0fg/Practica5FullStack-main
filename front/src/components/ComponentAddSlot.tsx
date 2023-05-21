@@ -4,7 +4,7 @@ import { gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Header } from '@/pages/index';
+import { DivButton, Header } from '@/pages/index';
 import e from 'cors';
 
 
@@ -89,7 +89,9 @@ const  ComponentAddSlot = () => {
 
   return (
     <>
-    <Header>Agregar horario disponible</Header>
+    <Header>
+      <h1>Agregar horario disponible</h1>
+    </Header>
     <Form onSubmit={handleSubmit}>
       <label htmlFor="day">Día</label>
       <input type="number" id="day" name="day" required onChange={handleChange} />
@@ -103,10 +105,10 @@ const  ComponentAddSlot = () => {
     { showSuccessMessage && showAlert && (<p>Añadido correctamente</p>)}
 
     </Form>
-    <div>
+    <DivButton>
       <button onClick={() => router.push("/citas")}>Ver Citas</button>
       <button  onClick={() => router.push("/")}>Inicio</button>
-    </div>
+    </DivButton>
     </>
   );
 };
@@ -118,6 +120,7 @@ export const Form = styled.form`
   display: flex;
   flex-direction: column;
   width: 300px;
+  height: 400px;
   margin: 0 auto;
   padding: 20px;
   background-color: grey;
@@ -140,6 +143,7 @@ export const Form = styled.form`
     background-color: black;
     text-align: center;
     text-color: black;
+    margin-top: 40px;
     cursor: pointer;
     &:hover {
       background-color: #ccc;

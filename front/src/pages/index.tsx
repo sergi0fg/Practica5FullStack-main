@@ -19,7 +19,9 @@ const Home = () => {
   };
   return (
     <>
-      <Header>Aplicación de citas médicas</Header>
+      <Header>
+        <h1>Aplicación de citas médicas</h1>
+        </Header>
       <DivButton>
         <button onClick={handleCitas}>Ver Citas</button>
         <button onClick={handleAddCitas}>Añadir Cita</button>
@@ -35,15 +37,23 @@ export default Home;
 export const Header = styled.header`
   display: flex;
   justify-content: center;
+  justify-content: space-between;
   align-items: center;
   text-align: center;
   height: 10rem;
   background-color: grey;
   border-bottom: 1px solid #e6e6e6;
+  border: solid 3px black;
   font-size: 4rem;
   font-weight: 700;
   color: white;
   margin-bottom: 5rem;
+  h1{
+    font-size: 4rem;
+    margin: 0 auto;
+    
+  }
+
 `;
 
 export const DivButton = styled.div`
@@ -54,6 +64,7 @@ export const DivButton = styled.div`
   align-items: center;
   text-align: center;
   margin: 0 auto;
+  margin-top: 6rem;
 
   button {
     height: 4rem;

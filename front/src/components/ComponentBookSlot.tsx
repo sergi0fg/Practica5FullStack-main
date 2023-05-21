@@ -76,7 +76,9 @@ mutation BookSlot($year: Int!, $month: Int!, $day: Int!, $hour: Int!, $dni: Stri
   };
    return(
     <>
-    <Header>Book Cita</Header>
+    <Header>
+        <h1>Book Cita</h1>
+    </Header>
     <Form action="">
         <label htmlFor="year">Año: </label>
         <input type="number" id="year" name="year" onChange={handleChange}/>
