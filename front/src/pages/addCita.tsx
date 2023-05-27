@@ -4,7 +4,6 @@ import { gql } from '@apollo/client';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import styled from 'styled-components';
-import { Header } from '.';
 import ComponentAddSlot from '@/components/ComponentAddSlot';
 
 

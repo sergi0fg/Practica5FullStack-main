@@ -7,8 +7,14 @@ import router from "next/router";
 import { set } from "mongoose";
 
 
-
-
+interface DeletelSlotProps {
+  day: number;
+  month: number;
+  year: number;
+  hour: number;
+  dni?:string;
+  available:boolean;
+}
 
 const REMOVE_SLOT_MUTATION = gql`
   mutation RemoveSlot($year: Int!, $month: Int!, $day: Int!, $hour: Int!) {
@@ -87,5 +93,6 @@ const ComponentDeleteSlot = () => {
     </>
   );
 };
+
 
 export default ComponentDeleteSlot;

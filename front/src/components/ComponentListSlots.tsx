@@ -6,6 +6,8 @@ import styled from "styled-components";
 import { client, clientSSR } from "@/utils/apollo-client";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { Slot } from "@/types";
+import { useState } from "react";
+import { Form } from "./ComponentAddSlot";
 
 
 interface SlotsProps {
@@ -23,29 +25,56 @@ const GET_AVAILABLE_SLOTS_QUERY = gql`
   }
 `;
 
-const ComponentListSlots = ({ slots }: SlotsProps) => {
+const ComponentListSlots = ({ slots }:SlotsProps) => {
   console.log(slots);
-  //const { loading, error, data } = useQuery(GET_AVAILABLE_SLOTS_QUERY);
   const router = useRouter();
+  const { year, month, day } = router.query;
+  const [selectedDay, setSelectedDay] = useState('');
+  const [selectedMonth, setSelectedMonth] = useState('');
+  const { loading, error, data } = useQuery(GET_AVAILABLE_SLOTS_QUERY, {
+    client: clientSSR,
+    variables: {
+      year,
+      month,
+      day,
+    },
+  });
 
   const handleHome = () => {
-    router.push("/");
+    router.push('/');
   };
 
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    const query = selectedMonth ? `/citas?month=${selectedMonth}` : `/citas?day=${selectedDay}`;
+    router.push(query);
+    const selectedDate = selectedMonth ? selectedMonth : selectedDay;
+    const hasSlots = slots.some((slot) => slot.month === parseInt(selectedDate, 10) || slot.day === parseInt(selectedDate, 10));
+    console.log(`Citas disponibles para ${selectedDate}:`, hasSlots);
+  };
+  
 
+  const handleDayChange = (e:any) => {
+    setSelectedDay(e.target.value);
+  };
+
+  const handleMonthChange = (e:any) => {
+    setSelectedMonth(e.target.value);
+  };
 
   const addCita = () => {
-    router.push("/addCita");
+    router.push('/addCita');
   };
+
   const bookCita = () => {
-    router.push("/bookCita");
+    router.push('/bookCita');
   };
 
   const deleteCita = () => {
-    router.push("/deleteCita");
+    router.push('/deleteCita');
   };
+
   if (!slots || slots.length === 0) {
-    // Manejar el caso cuando slots no está definido o es un arreglo vacío
     return (
       <>
         <h1>Citas Médicas Disponibles</h1>
@@ -66,19 +95,39 @@ const ComponentListSlots = ({ slots }: SlotsProps) => {
         </DivHeader>
       </Header>
       <Container>
+        <Form onSubmit={handleSubmit}>
+          <label>
+            Consultar por día:
+            <input type="text" value={selectedDay} onChange={handleDayChange} />
+          </label>
+          <br />
+          <label>
+            Consultar por mes:
+            <input type="text" value={selectedMonth} onChange={handleMonthChange} />
+          </label>
+          <br />
+          <button type="submit">Consultar</button>
+        </Form>
+        
         {slots.map((slot: Slot) => (
-          <li key={`${slot.year}-${slot.month}-${slot.day}-${slot.hour}`}>
+          <li key={`${slot.id}-${slot.month}-${slot.day}-${slot.hour}`}>
             <p>Día: {slot.day}</p>
             <p>Mes: {slot.month}</p>
             <p>Año: {slot.year}</p>
             <p>Hora: {slot.hour}:00</p>
           </li>
         ))}
+        {slots.length > 0 && (
+  <p>
+    {selectedMonth
+      ? `Citas disponibles para el mes ${selectedMonth}: ${slots.length}`
+      : `Citas disponibles para el día ${selectedDay}: ${slots.length}`}
+  </p>
+)}
       </Container>
       <DivButton>
-      <button onClick={handleHome}>Inicio</button>
+        <button onClick={handleHome}>Inicio</button>
       </DivButton>
-     
     </>
   );
 };
@@ -100,10 +149,11 @@ export const Header = styled.header`
   font-weight: 700;
   color: white;
   margin-bottom: 5rem;
+  
   h1{
     font-size: 4rem;
     margin: 0 auto;
-    margin-left: 690px;
+    margin-left: 680px;
   }
 
 `;
@@ -167,19 +217,22 @@ export const Container = styled.div`
   margin: 0 auto;
   background-color: grey;
   width: 40rem;
-  height: 20rem;
+  height: 30rem;
   margin-top: 40px;
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+  
   li {
     list-style: none;
     margin-bottom: 10px;
-    margin-top: 50px;
+    margin-top: 3rem;
     padding: 40px;
     margin: 0 auto;
     text-align: center;
     text-decoration: none;
     text-color: black;
+    width: 40rem;
+    height: 30rem;
   }
 `;

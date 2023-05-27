@@ -1,107 +1,171 @@
-import { gql, useMutation } from "@apollo/client";
-import { useRouter } from "next/router";
-import { useState } from "react";
-import { Slot } from "@/types"
+import { client } from '@/utils/apollo-client';
+import { useMutation } from '@apollo/client';
+import { gql } from '@apollo/client';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import styled from 'styled-components';
 import { DivButton, Header } from '@/components/ComponentIndex';
-import { client } from "@/utils/apollo-client";
-import { Form } from "@/components/ComponentAddSlot";
+import e from 'cors';
+import { Form } from './ComponentAddSlot';
 
 
-interface bookSlotProps{
-    slots: Slot[];
+//Esta página será de tipo CSR (Client-Side Rendering)
+// porque la funcionalidad de agregar un horario disponible 
+//no requiere datos actualizados del servidor en tiempo real 
+//y puede ser manejada completamente en el lado del cliente.
+
+interface BookSlotProps {
+  day: number;
+  month: number;
+  year: number;
+  hour: number;
+  dni: string;
+  available: boolean;
 }
 
 export const BOOK_SLOT_MUTATION = gql`
-mutation BookSlot($year: Int!, $month: Int!, $day: Int!, $hour: Int!, $dni: String!) {
-    bookSlot(year: $year, month: $month, day: $day, hour: $hour, dni: $dni) {
-      hour
-      month
-      year
-      day
-      dni
-    }
+ mutation BookSlot($year: Int!, $month: Int!, $day: Int!, $hour: Int!, $dni: String!) {
+  bookSlot(year: $year, month: $month, day: $day, hour: $hour, dni: $dni) {
+    available
+    day
+    dni
+    hour
+    month
+    year
   }
+}
 `;
 
- const ComponentBookSlot = () => {
-    const router = useRouter();
-    const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Estado para controlar la visibilidad del mensaje de éxito
-    const [showAlert, setShowAlert] = useState(false);
-    const [bookSlot, { loading, error }] = useMutation(BOOK_SLOT_MUTATION,{
-        onCompleted: () => {
-          setShowSuccessMessage(true),
-          setShowAlert(true)
+const  ComponentAddSlot = () => {
+  const router = useRouter();
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false); // Estado para controlar la visibilidad del mensaje de éxito
+  const [showAlert, setShowAlert] = useState(false);
+  const [addSlot, { loading, error }] = useMutation(BOOK_SLOT_MUTATION,{
+    onCompleted: () => {
+      setShowSuccessMessage(true),
+      setShowAlert(true)
+    },
+  });
+  const [formData, setFormData] = useState<BookSlotProps>({
+    year: 0,
+    month: 0,
+    day: 0,
+    hour: 0,
+    dni: "",
+    available: false,
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await addSlot({
+        variables: {
+          year: formData.year,
+          month: formData.month,
+          day: formData.day,
+          hour: formData.hour,
+          dni: formData.dni,
+          available: formData.available,
         },
       });
-   const [formData,setFormData] = useState({
-    year:0,
-    month:0,
-    day:0,
-    hour:0,
-    dni:""
-   });
+      
+      console.log(data);
+      setShowSuccessMessage(true); 
+      
+      setFormData({
+        year: 0,
+        month: 0,
+        day: 0,
+        hour: 0,
+        dni: "",
+        available: false,
 
-   const handleChange = (e:React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        })
-   }
-
-   const handleBookSlot = async() =>{
-    try {
-        const { data } = await bookSlot({
-            variables: {
-              year: formData.year,
-              month: formData.month,
-              day: formData.day,
-              hour: formData.hour,
-              dni: formData.dni,  
-            },
-          });
-        setShowSuccessMessage(true);
-        setShowAlert(true);
-        
-
+      });
+      alert("Añadido correctamente");
+     
     } catch (error) {
-        
+      console.log(error);
     }
-   }
-   const handleInicio = () => {
-    router.push("/");
   };
 
-   const handleCitas = () => {
-    router.push("/citas");
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+  
+    setFormData({
+      ...formData,
+      [name]: name === 'dni' ? value : parseInt(value),
+    });
   };
-   return(
+  
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error: {error.message}</p>;
+
+  return (
     <>
     <Header>
-        <h1>Book Cita</h1>
+      <h1>Reservar una Cita</h1>
     </Header>
-    <Form action="">
-        <label htmlFor="year">Año: </label>
-        <input type="number" id="year" name="year" onChange={handleChange}/>
-        <label htmlFor="month">Mes: </label>
-        <input type="number" id="month" name="month" onChange={handleChange}/>
-        <label htmlFor="day">Día: </label>
-        <input type="number" id="day" name="date" onChange={handleChange}/>
-        <label htmlFor="hour">Hora: </label>
-        <input type="hour" id="hour" name="hour" onChange={handleChange} />
-        <label htmlFor="dni">DNI: </label>
-        <input type="number" id="dni" name="dni" onChange={handleChange} />
-        <button type="button" onClick={handleBookSlot}>Reservar Cita</button>
+    <Form onSubmit={handleSubmit}>
+    <label htmlFor="year">Año</label>
+    <input
+      type="number"
+      name="year"
+      id="year"
+     
+      onChange={handleChange}
+      required
+    />
+    <label htmlFor="month">Mes</label>
+    <input
+      type="number"
+      name="month"
+      id="month"
+
+      onChange={handleChange}
+      required
+    />
+    <label htmlFor="day">Día</label>
+    <input
+      type="number"
+      name="day"
+      id="day"
+     
+      onChange={handleChange}
+      required
+    />
+    <label htmlFor="hour">Hora</label>
+    <input
+      type="number"
+      name="hour"
+      id="hour"
+     
+      onChange={handleChange}
+      required
+    />
+    <label htmlFor="dni">DNI</label>
+    <input
+      type="text"
+      name="dni"
+      id="dni"
+      
+      onChange={handleChange}
+      required
+    />
+    
+
+      <button type="submit">Agregar horario disponible</button>
+    { showSuccessMessage && showAlert && (<p>Añadido correctamente</p>)}
 
     </Form>
     <DivButton>
-        <button onClick={handleInicio}>Inicio</button>
-        <button onClick={handleCitas}>Ver Citas</button>
+      <button onClick={() => router.push("/citas")}>Ver Citas</button>
+      <button  onClick={() => router.push("/")}>Inicio</button>
     </DivButton>
-    
     </>
+  );
+};
 
-   )
-}
-  
 
-export  default ComponentBookSlot;
+export default ComponentAddSlot;

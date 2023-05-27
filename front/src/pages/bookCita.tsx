@@ -2,7 +2,7 @@ import { gql, useMutation } from "@apollo/client";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { Slot } from "@/types"
-import { DivButton, Header } from "@/pages/index"
+import { DivButton, Header } from "@/components/ComponentIndex"
 import { client } from "@/utils/apollo-client";
 import { Form } from "@/components/ComponentAddSlot";
 import ComponentBookSlot  from "@/components/ComponentBookSlot";

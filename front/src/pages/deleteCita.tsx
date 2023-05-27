@@ -1,6 +1,6 @@
 import { Slot } from "@/types";
 import { gql, useMutation } from "@apollo/client";
-import { Header } from ".";
+import { Header } from "@/components/ComponentIndex";
 import { Form } from "@/components/ComponentAddSlot"
 import { useState } from "react";
 import router from "next/router";
